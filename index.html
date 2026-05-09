@@ -1,1 +1,247 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>المكتبة التراثية الإسلامية</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f5f0e8; direction: rtl; }
 
+  /* HEADER */
+  header { background: linear-gradient(135deg, #1a3a2a, #2d6a4f); color: #fff; padding: 0 20px; }
+  .header-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .logo { display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: bold; }
+  nav a { color: #fff; text-decoration: none; margin-right: 16px; font-size: 15px; padding: 4px 10px; border-radius: 6px; }
+  nav a:hover { background: rgba(255,255,255,0.2); }
+
+  /* HERO */
+  .hero { background: linear-gradient(180deg, #2d6a4f 0%, #f5f0e8 100%); padding: 60px 20px 40px; text-align: center; color: #fff; }
+  .hero h1 { font-size: 36px; margin-bottom: 10px; }
+  .hero p { font-size: 18px; opacity: 0.9; margin-bottom: 30px; }
+  .search-box { display: flex; max-width: 500px; margin: 0 auto; background: #fff; border-radius: 30px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+  .search-box input { flex: 1; padding: 14px 20px; border: none; outline: none; font-size: 16px; direction: rtl; }
+  .search-box button { background: #2d6a4f; color: #fff; border: none; padding: 0 24px; cursor: pointer; font-size: 16px; }
+
+  /* STATS */
+  .stats { display: flex; justify-content: center; gap: 24px; padding: 30px 20px; flex-wrap: wrap; }
+  .stat-card { background: #fff; border-radius: 12px; padding: 20px 28px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+  .stat-card .icon { font-size: 28px; }
+  .stat-card .val { font-size: 22px; font-weight: bold; color: #2d6a4f; }
+  .stat-card .lbl { color: #888; font-size: 14px; }
+
+  /* BOOKS GRID */
+  .section { max-width: 1100px; margin: 0 auto; padding: 20px; }
+  .section-title { font-size: 20px; font-weight: bold; color: #1a3a2a; margin-bottom: 16px; }
+  .books-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+  .book-card { background: #fff; border-radius: 10px; padding: 18px; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.07); transition: transform 0.2s; }
+  .book-card:hover { transform: translateY(-3px); }
+  .book-card .book-icon { font-size: 36px; text-align: center; margin-bottom: 10px; }
+  .book-card .book-title { font-weight: bold; color: #1a3a2a; margin-bottom: 4px; }
+  .book-card .book-author { color: #777; font-size: 13px; margin-bottom: 8px; }
+  .book-card .book-desc { color: #555; font-size: 13px; margin-bottom: 10px; }
+  .book-card .book-footer { display: flex; justify-content: space-between; align-items: center; }
+  .badge { background: #e8f5e9; color: #2d6a4f; padding: 2px 10px; border-radius: 20px; font-size: 12px; }
+  .pages { color: #aaa; font-size: 12px; }
+
+  /* FILTER */
+  .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+  .filter-btn { background: #fff; border: 1px solid #ccc; border-radius: 20px; padding: 6px 16px; cursor: pointer; font-size: 14px; }
+  .filter-btn.active { background: #2d6a4f; color: #fff; border-color: #2d6a4f; }
+
+  /* READER */
+  .reader { max-width: 800px; margin: 30px auto; background: #fffef8; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.12); padding: 30px 40px; display: none; }
+  .reader-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #e0d5b0; padding-bottom: 14px; }
+  .reader-title { font-size: 22px; font-weight: bold; color: #1a3a2a; }
+  .reader-author { color: #666; margin-top: 4px; }
+  .font-controls { display: flex; gap: 8px; align-items: center; }
+  .font-controls button { background: #e0d5b0; border: none; border-radius: 6px; padding: 4px 10px; cursor: pointer; font-size: 16px; }
+  .close-btn { background: #c0392b; color: #fff; border: none; border-radius: 6px; padding: 4px 14px; cursor: pointer; }
+  .reader-content { line-height: 2.2; color: #2c2c2c; text-align: justify; white-space: pre-line; }
+  .reader-footer { margin-top: 24px; text-align: center; color: #aaa; font-size: 13px; }
+
+  /* FOOTER */
+  footer { background: #1a3a2a; color: #a0c4a8; text-align: center; padding: 20px; margin-top: 40px; font-size: 14px; }
+
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">📚 المكتبة التراثية</div>
+    <nav>
+      <a href="#" onclick="showPage('home')">الرئيسية</a>
+      <a href="#" onclick="showPage('library')">المكتبة</a>
+      <a href="#" onclick="showPage('about')">عن الموقع</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HOME PAGE -->
+<div id="page-home">
+  <div class="hero">
+    <h1>مكتبة التراث الإسلامي</h1>
+    <p>آلاف الكتب التراثية في متناول يدك</p>
+    <div class="search-box">
+      <input type="text" id="hero-search" placeholder="ابحث عن كتاب أو مؤلف...">
+      <button onclick="doSearch()">🔍</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card"><div class="icon">📚</div><div class="val">١٠٠٠+</div><div class="lbl">كتاب</div></div>
+    <div class="stat-card"><div class="icon">👤</div><div class="val">٥٠٠+</div><div class="lbl">مؤلف</div></div>
+    <div class="stat-card"><div class="icon">📂</div><div class="val">٢٠+</div><div class="lbl">تصنيف</div></div>
+    <div class="stat-card"><div class="icon">👁</div><div class="val">مجاني</div><div class="lbl">للجميع</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">📖 كتب مميزة</div>
+    <div class="books-grid" id="featured-books"></div>
+    <div style="text-align:center; margin-top:24px;">
+      <button onclick="showPage('library')" style="background:#2d6a4f;color:#fff;border:none;border-radius:8px;padding:12px 32px;font-size:16px;cursor:pointer;">عرض جميع الكتب</button>
+    </div>
+  </div>
+</div>
+
+<!-- LIBRARY PAGE -->
+<div id="page-library" class="hidden">
+  <div class="section">
+    <div class="section-title">📚 المكتبة</div>
+    <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
+      <input type="text" id="lib-search" placeholder="ابحث عن كتاب أو مؤلف..." style="flex:1;min-width:200px;padding:10px 16px;border-radius:8px;border:1px solid #ccc;font-size:15px;direction:rtl;">
+    </div>
+    <div class="filters" id="category-filters"></div>
+    <div class="books-grid" id="all-books"></div>
+  </div>
+</div>
+
+<!-- ABOUT PAGE -->
+<div id="page-about" class="hidden">
+  <div style="max-width:700px;margin:40px auto;background:#fff;border-radius:12px;padding:36px;box-shadow:0 2px 16px rgba(0,0,0,0.08);">
+    <div style="font-size:24px;font-weight:bold;color:#1a3a2a;margin-bottom:16px;">عن المكتبة التراثية</div>
+    <p style="line-height:2;color:#444;margin-bottom:16px;">المكتبة التراثية مشروع لإتاحة كتب التراث الإسلامي رقمياً بشكل مجاني للجميع، تيسيراً لطلب العلم ونشر المعرفة.</p>
+    <p style="line-height:2;color:#444;margin-bottom:16px;">تضم المكتبة آلاف الكتب في شتى العلوم الإسلامية من تفسير وحديث وفقه وتاريخ وسيرة وعقيدة وأدب وغيرها.</p>
+    <div style="padding:16px;background:#f5f0e8;border-radius:8px;color:#2d6a4f;font-weight:bold;text-align:center;">📧 للتواصل: library@turath-demo.com</div>
+  </div>
+</div>
+
+<!-- BOOK READER -->
+<div class="reader" id="book-reader">
+  <div class="reader-header">
+    <div>
+      <div class="reader-title" id="reader-title"></div>
+      <div class="reader-author" id="reader-author"></div>
+    </div>
+    <div class="font-controls">
+      <button onclick="changeFontSize(-2)">أ−</button>
+      <button onclick="changeFontSize(2)">أ+</button>
+      <button class="close-btn" onclick="closeReader()">✕ إغلاق</button>
+    </div>
+  </div>
+  <div class="reader-content" id="reader-content"></div>
+  <div class="reader-footer" id="reader-footer"></div>
+</div>
+
+<footer>© ٢٠٢٦ المكتبة التراثية — جميع الحقوق محفوظة</footer>
+
+<script>
+const books = [
+  { id:1, title:"صحيح البخاري", author:"الإمام البخاري", category:"حديث", pages:2602, desc:"أصح كتب الحديث النبوي الشريف" },
+  { id:2, title:"صحيح مسلم", author:"الإمام مسلم", category:"حديث", pages:2200, desc:"من أصح كتب السنة النبوية" },
+  { id:3, title:"الموطأ", author:"الإمام مالك", category:"حديث", pages:1000, desc:"أول المصنفات الجامعة للحديث والفقه" },
+  { id:4, title:"إحياء علوم الدين", author:"الإمام الغزالي", category:"تصوف", pages:1900, desc:"من أشهر كتب التراث في تزكية النفس" },
+  { id:5, title:"تفسير ابن كثير", author:"ابن كثير", category:"تفسير", pages:3200, desc:"من أشهر كتب التفسير بالمأثور" },
+  { id:6, title:"مقدمة ابن خلدون", author:"ابن خلدون", category:"تاريخ", pages:1400, desc:"موسوعة في التاريخ والاجتماع والفلسفة" },
+  { id:7, title:"الرسالة", author:"الإمام الشافعي", category:"فقه", pages:600, desc:"أول كتاب صنف في أصول الفقه الإسلامي" },
+  { id:8, title:"زاد المعاد", author:"ابن القيم الجوزية", category:"سيرة", pages:1800, desc:"في هدي خير العباد صلى الله عليه وسلم" },
+];
+
+const sampleText = `بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ\n\nالحمد لله رب العالمين، والصلاة والسلام على أشرف الأنبياء والمرسلين.\n\nأما بعد، فهذا كتاب جليل القدر، عظيم الفائدة، جمع فيه مصنفه رحمه الله تعالى خلاصة علمه ونتيجة فكره.\n\nوقد رتبه على أبواب وفصول، كل باب يحتوي على مسائل مهمة وفوائد جليلة، تنفع طالب العلم وتعينه على فهم الدين القويم.\n\nفمن أراد الاستفادة منه فليقرأه بتأمل وتدبر، ومن وجد فيه خيراً فليدعُ لمصنفه بالرحمة والمغفرة.`;
+
+let fontSize = 18;
+let currentCat = "الكل";
+
+function renderBooks(list, containerId) {
+  const icons = ["📕","📗","📘","📙"];
+  document.getElementById(containerId).innerHTML = list.map((b,i) => `
+    <div class="book-card" onclick="openBook(${b.id})">
+      <div class="book-icon">${icons[i%4]}</div>
+      <div class="book-title">${b.title}</div>
+      <div class="book-author">${b.author}</div>
+      <div class="book-desc">${b.desc}</div>
+      <div class="book-footer">
+        <span class="badge">${b.category}</span>
+        <span class="pages">${b.pages} صفحة</span>
+      </div>
+    </div>`).join('');
+}
+
+function renderCategories() {
+  const cats = ["الكل", ...new Set(books.map(b => b.category))];
+  document.getElementById('category-filters').innerHTML = cats.map(c =>
+    `<button class="filter-btn ${c===currentCat?'active':''}" onclick="filterCat('${c}')">${c}</button>`
+  ).join('');
+}
+
+function filterCat(cat) {
+  currentCat = cat;
+  renderCategories();
+  const q = document.getElementById('lib-search').value;
+  filterBooks(q);
+}
+
+function filterBooks(q) {
+  const filtered = books.filter(b =>
+    (currentCat === "الكل" || b.category === currentCat) &&
+    (b.title.includes(q) || b.author.includes(q))
+  );
+  renderBooks(filtered, 'all-books');
+}
+
+function doSearch() {
+  const q = document.getElementById('hero-search').value;
+  document.getElementById('lib-search').value = q;
+  showPage('library');
+  filterBooks(q);
+}
+
+function openBook(id) {
+  const b = books.find(x => x.id === id);
+  document.getElementById('reader-title').textContent = b.title;
+  document.getElementById('reader-author').textContent = b.author;
+  document.getElementById('reader-content').style.fontSize = fontSize + 'px';
+  document.getElementById('reader-content').textContent = sampleText;
+  document.getElementById('reader-footer').textContent = `— صفحة ١ من ${b.pages} —`;
+  document.getElementById('book-reader').style.display = 'block';
+  document.getElementById('book-reader').scrollIntoView({behavior:'smooth'});
+}
+
+function closeReader() {
+  document.getElementById('book-reader').style.display = 'none';
+}
+
+function changeFontSize(d) {
+  fontSize = Math.min(28, Math.max(14, fontSize + d));
+  document.getElementById('reader-content').style.fontSize = fontSize + 'px';
+}
+
+function showPage(name) {
+  ['home','library','about'].forEach(p => {
+    document.getElementById('page-'+p).classList.toggle('hidden', p !== name);
+  });
+  closeReader();
+  if (name === 'library') {
+    renderCategories();
+    filterBooks('');
+  }
+}
+
+// Init
+renderBooks(books.slice(0,4), 'featured-books');
+document.getElementById('lib-search').addEventListener('input', e => filterBooks(e.target.value));
+</script>
+</body>
+  </html>
